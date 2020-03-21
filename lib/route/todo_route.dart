@@ -49,6 +49,13 @@ class TodoRouteState extends State<TodoRoute> {
             }));
   }
 
+  void onCheck(TodoModel todo, bool value) {
+    print('value' + value.toString());
+    TodoModel newTodo = TodoModel.fromTodo(todo);
+    newTodo.isDone = value;
+    _editTodo(newTodo.id, newTodo);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +86,7 @@ class TodoRouteState extends State<TodoRoute> {
               todoList: _todoList,
               onEdit: onEdit,
               onDelete: deleteTodo,
+              onCheck: onCheck,
             ),
           ],
         ),

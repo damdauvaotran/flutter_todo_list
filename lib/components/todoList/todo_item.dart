@@ -7,11 +7,14 @@ class TodoItem extends StatelessWidget {
   final TodoModel todoItem;
   final Function onDelete;
   final Function onEdit;
+  final Function onCheck;
 
-  TodoItem(
-      {@required this.todoItem,
-      @required this.onDelete,
-      @required this.onEdit});
+  TodoItem({
+    @required this.todoItem,
+    @required this.onDelete,
+    @required this.onEdit,
+    @required this.onCheck,
+  });
 
   void deleteTodo() {
     onDelete(todoItem.id);
@@ -23,7 +26,7 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('todo Item'+ todoItem.toString());
+    print('todo Item' + todoItem.toString());
     return Container(
         height: 50,
         child: Row(
@@ -34,7 +37,12 @@ class TodoItem extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     child: Row(
                       children: <Widget>[
-                        Checkbox(value: todoItem.isDone),
+                        Checkbox(
+                          value: todoItem.isDone,
+                          onChanged: (isCheck) {
+                            onCheck(todoItem, isCheck);
+                          },
+                        ),
                         Text(
                           todoItem.content,
                           style: TextStyle(fontSize: 16),

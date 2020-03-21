@@ -6,11 +6,14 @@ class TodoList extends StatelessWidget {
   final List<TodoModel> todoList;
   final Function onDelete;
   final Function onEdit;
+  final Function onCheck;
 
-  TodoList(
-      {@required this.todoList,
-      @required this.onEdit,
-      @required this.onDelete});
+  TodoList({
+    @required this.todoList,
+    @required this.onEdit,
+    @required this.onDelete,
+    @required this.onCheck,
+  });
 
   List buildTodoList() {
     return this.todoList.map((TodoModel todoItem) {
@@ -18,6 +21,7 @@ class TodoList extends StatelessWidget {
         todoItem: todoItem,
         onDelete: onDelete,
         onEdit: onEdit,
+        onCheck: onCheck,
       );
     }).toList();
   }

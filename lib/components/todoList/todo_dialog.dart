@@ -18,6 +18,7 @@ class TodoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _controller.text = todoItem.content;
     return AlertDialog(
       title: Text('Edit todo'),
       content: TextField(
