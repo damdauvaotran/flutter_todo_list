@@ -8,6 +8,14 @@ class TodoDialog extends StatelessWidget {
 
   TodoDialog({@required this.onEdit, @required this.todoItem});
 
+  editTodo(BuildContext context) {
+    TodoModel newTodoModel = TodoModel.fromTodo(todoItem);
+    onEdit( newTodoModel);
+    newTodoModel.content = _controller.text;
+    _controller.clear();
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -26,9 +34,7 @@ class TodoDialog extends StatelessWidget {
         FlatButton(
           child: Text('edit'),
           onPressed: () {
-            onEdit(new TodoModel(content: _controller.text));
-            _controller.clear();
-            Navigator.of(context).pop();
+            editTodo(context);
           },
         ),
       ],

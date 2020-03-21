@@ -14,9 +14,7 @@ class TodoList extends StatelessWidget {
 
   List buildTodoList() {
     return this.todoList.map((TodoModel todoItem) {
-      int index = todoList.indexOf(todoItem);
       return TodoItem(
-        id: index,
         todoItem: todoItem,
         onDelete: onDelete,
         onEdit: onEdit,

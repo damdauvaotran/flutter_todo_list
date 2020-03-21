@@ -5,26 +5,25 @@ import 'package:todo_list/model/todo.dart';
 
 class TodoItem extends StatelessWidget {
   final TodoModel todoItem;
-  final int id;
   final Function onDelete;
   final Function onEdit;
 
   TodoItem(
       {@required this.todoItem,
-      @required this.id,
       @required this.onDelete,
       @required this.onEdit});
 
   void deleteTodo() {
-    onDelete(id);
+    onDelete(todoItem.id);
   }
 
   void editTodo() {
-    onEdit(id);
+    onEdit(todoItem.id);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('todo Item'+ todoItem.toString());
     return Container(
         height: 50,
         child: Row(

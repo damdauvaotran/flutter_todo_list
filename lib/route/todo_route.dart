@@ -1,16 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:todo_list/api/bulder.dart';
 import 'package:todo_list/components/drawer/app_drawer.dart';
 import 'package:todo_list/components/todoList/add_todo.dart';
 import 'package:todo_list/components/todoList/todo_dialog.dart';
-import 'package:todo_list/components/todoList/todo_item.dart';
 import 'package:todo_list/components/todoList/todo_list.dart';
 import 'package:logging/logging.dart';
 import 'package:todo_list/db/todo_db_privider.dart';
 import 'package:todo_list/model/todo.dart';
-import 'package:todo_list/route/category_route.dart';
 
 final log = Logger('MyClassName');
 
@@ -27,16 +22,20 @@ class TodoRouteState extends State<TodoRoute> {
 
   List<TodoModel> _todoList = [];
 
-  void addTodo(String text) {
-    setState(() {
-      _todoList.add(new TodoModel(content: text));
-    });
+  void addTodo(String text) async {
+    TodoModel newTodo = TodoModel(content: text);
+    await TodoDatabase.getInstance().insert(newTodo);
+    _fetch();
   }
 
-  void deleteTodo(int id) {
-    setState(() {
-      _todoList.removeAt(id);
-    });
+  void deleteTodo(int id) async {
+    await TodoDatabase.getInstance().delete(id);
+    _fetch();
+  }
+
+  void _editTodo(int id, TodoModel todo) async {
+    await TodoDatabase.getInstance().update(id, todo);
+    _fetch();
   }
 
   void onEdit(int id) {
@@ -44,16 +43,10 @@ class TodoRouteState extends State<TodoRoute> {
     showDialog(
         context: context,
         builder: (_) => TodoDialog(
-            todoItem: _todoList[id],
+            todoItem: _todoList.firstWhere((todo) => todo.id == id),
             onEdit: (TodoModel todo) {
               _editTodo(id, todo);
             }));
-  }
-
-  void _editTodo(int id, TodoModel todo) {
-    this.setState(() {
-      _todoList[id] = todo;
-    });
   }
 
   @override
@@ -79,16 +72,17 @@ class TodoRouteState extends State<TodoRoute> {
       ),
       drawer: AppDrawer(),
       body: Container(
-          child: Column(
-        children: [
-          AddTodo(onAddTodo: addTodo),
-          TodoList(
-            todoList: _todoList,
-            onEdit: onEdit,
-            onDelete: deleteTodo,
-          ),
-        ],
-      )),
+        child: Column(
+          children: [
+            AddTodo(onAddTodo: addTodo),
+            TodoList(
+              todoList: _todoList,
+              onEdit: onEdit,
+              onDelete: deleteTodo,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

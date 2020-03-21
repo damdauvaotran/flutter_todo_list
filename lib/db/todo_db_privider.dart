@@ -40,11 +40,12 @@ class TodoDatabase {
   }
 
   Future update(int id, TodoModel todo) async {
+    print('update' + todo.toString());
     Database db = await database;
     await db.update(
       'todo', todo.toDbMap(), where: "id = ?",
       // Pass the Dog's id as a whereArg to prevent SQL injection.
-      whereArgs: [id],
+      whereArgs: [todo.id],
     );
   }
 
