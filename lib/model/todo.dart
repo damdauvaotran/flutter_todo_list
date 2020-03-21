@@ -14,6 +14,20 @@ class TodoModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'content': content,
+      'isDone': isDone,
+    };
+  }
+
+  factory TodoModel.fromDBMap(Map<String, dynamic> json) {
+    return TodoModel(
+      content: json['content'] as String,
+      isDone: json['is_done'] == 1,
+    );
+  }
+
   Map<String, dynamic> toDbMap() {
     return {
       'content': content,

@@ -8,6 +8,7 @@ import 'package:todo_list/components/todoList/todo_dialog.dart';
 import 'package:todo_list/components/todoList/todo_item.dart';
 import 'package:todo_list/components/todoList/todo_list.dart';
 import 'package:logging/logging.dart';
+import 'package:todo_list/db/todo_db_privider.dart';
 import 'package:todo_list/model/todo.dart';
 import 'package:todo_list/route/category_route.dart';
 
@@ -42,8 +43,9 @@ class TodoRouteState extends State<TodoRoute> {
     print(id);
     showDialog(
         context: context,
-        builder: (_) =>
-            TodoDialog(todoItem: _todoList[id], onEdit: (TodoModel todo) {
+        builder: (_) => TodoDialog(
+            todoItem: _todoList[id],
+            onEdit: (TodoModel todo) {
               _editTodo(id, todo);
             }));
   }
@@ -56,17 +58,16 @@ class TodoRouteState extends State<TodoRoute> {
 
   @override
   void initState() {
-    fetchTodo().then((res) {
-      log.fine('Got the result: $res');
-      print('Ok');
-    }).catchError((err) {
-      log.severe(err);
-      print(err.toString());
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(err.toString()),
-      ));
-    });
     super.initState();
+    _fetch();
+  }
+
+  void _fetch() async {
+    List<TodoModel> list = await TodoDatabase.getInstance().fetch();
+    print(list);
+    setState(() {
+      _todoList = list;
+    });
   }
 
   @override
@@ -79,15 +80,15 @@ class TodoRouteState extends State<TodoRoute> {
       drawer: AppDrawer(),
       body: Container(
           child: Column(
-            children: [
-              AddTodo(onAddTodo: addTodo),
-              TodoList(
-                todoList: _todoList,
-                onEdit: onEdit,
-                onDelete: deleteTodo,
-              ),
-            ],
-          )),
+        children: [
+          AddTodo(onAddTodo: addTodo),
+          TodoList(
+            todoList: _todoList,
+            onEdit: onEdit,
+            onDelete: deleteTodo,
+          ),
+        ],
+      )),
     );
   }
 }
